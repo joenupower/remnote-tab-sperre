@@ -12,8 +12,8 @@ export function detectLang(language?: string): Lang {
 
 const TEXTS = {
   settingHide: {
-    de: '✕-Knöpfe, Panel-Menüeinträge und Pfeile Zurück/Vor in gesperrten Tabs ausblenden, Ordnerpfad nicht anklickbar',
-    en: 'Hide pane close buttons, pane menu items and back/forward arrows in locked tabs; folder path not clickable',
+    de: 'In gesperrten Tabs ✕-Knöpfe, Panel-Menüeinträge, Pfeile Zurück/Vor, Ordner-Symbol und «Text Notes» ausblenden, Ordnerpfad nicht anklickbar',
+    en: 'In locked tabs hide pane close buttons, pane menu items, back/forward arrows, the parent folder button and "Text Notes"; folder path not clickable',
   },
   settingJump: {
     de: 'Bei geschlossenem oder neuem Panel in den gesperrten Tab zurückspringen',

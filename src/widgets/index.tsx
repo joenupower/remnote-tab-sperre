@@ -17,10 +17,11 @@ import { detectLang, t } from '../lib/i18n';
  * mit offiziellen Schnittstellen:
  *
  *  1. CSS (registerCSS): Ist der aktive Tab mit «Lock Tab» gesperrt, werden die ✕-Knöpfe
- *     der Panels, alle Menüeinträge rund um Panels («Open in Another Pane» usw.) und die
- *     Pfeile Zurück/Vor ausgeblendet. Der Ordnerpfad oben im Panel bleibt sichtbar,
- *     reagiert aber nicht mehr auf Klicks. Die Erkennung läuft rein über CSS (:has), RemNote markiert den aktiven,
- *     gesperrten Tab-Knopf mit «rn-tabs-tab-button--locked» + «rn-clr-background-primary».
+ *     der Panels, alle Menüeinträge rund um Panels («Open in Another Pane» usw.), die
+ *     Pfeile Zurück/Vor, das Ordner-Symbol neben Dateinamen und «Text Notes» ausgeblendet.
+ *     Der Ordnerpfad oben im Panel bleibt sichtbar, reagiert aber nicht mehr auf Klicks.
+ *     Die Erkennung läuft rein über CSS (:has), RemNote markiert den aktiven, gesperrten
+ *     Tab-Knopf mit «rn-tabs-tab-button--locked» + «rn-clr-background-primary».
  *
  *  2. Zurückspringen (getURL/setURL): Wird in einem gesperrten Tab trotzdem ein Panel
  *     geschlossen oder hinzugefügt (z. B. per Tastenkürzel), leitet RemNote die Änderung in
@@ -52,13 +53,18 @@ ${LOCKED} [data-test="Electron Window History Forward Button"],
 ${LOCKED} [data-test="Electron Window Tablet History Back Button"],
 ${LOCKED} [data-test="Electron Window Tablet History Forward Button"],
 ${LOCKED} .rn-back-button,
-${LOCKED} .rn-forward-button {
+${LOCKED} .rn-forward-button,
+/* Ordner-Symbol «Übergeordneter Ordner» neben dem Dateinamen (Zeichnungen, PDFs) */
+${LOCKED} .rn-pane__top-bar :has(> [style*="back-to-folder"]),
+${LOCKED} [data-test="Learning Page Header"] :has(> [style*="back-to-folder"]),
+/* «Text Notes» / «Notes»: öffnet die Notizen zur Datei in einem weiteren Panel */
+${LOCKED} [data-test="Text Notes Button"],
+${LOCKED} [data-test="Learning Page Notes Button"] {
   display: none !important;
 }
-/* Ordnerpfad oben im Panel (z. B. «📁 Rechtschreibung») und Knopf «Übergeordneter Ordner»
-   bei geöffneten Dateien: bleiben sichtbar, ein Klick wechselt aber nicht mehr eine Ebene hoch */
-${LOCKED} [data-test="Document Header Breadcrumbs"],
-${LOCKED} [data-test="Learning Page Header"] :has(> [style*="back-to-folder"]) {
+/* Ordnerpfad oben im Panel (z. B. «📁 Rechtschreibung»): bleibt sichtbar,
+   ein Klick wechselt aber nicht mehr eine Ebene hoch */
+${LOCKED} [data-test="Document Header Breadcrumbs"] {
   pointer-events: none !important;
 }
 /* Die kleinen Pfeile zum Durchblättern eines langen Pfads funktionieren weiter */
