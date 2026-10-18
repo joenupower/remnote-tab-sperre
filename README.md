@@ -11,17 +11,13 @@ Wenn du einen Tab mit **Rechtsklick → «Lock Tab»** sperrst, bleiben seine Pa
 
 Zum Ändern des Layouts entsperrst du den Tab kurz (Rechtsklick → «Unlock»).
 
-## Installieren
+## Einrichten
 
-RemNote → Einstellungen → **Plugins** → Reiter **Build** → **Develop from localhost** → diese Adresse eingeben:
+1. **Node.js installieren** (einmalig): auf <https://nodejs.org> die Version «LTS».
+2. **`plugin-starten.bat` doppelklicken.** Beim ersten Start werden die Abhängigkeiten installiert (1–2 Minuten). Danach läuft das Plugin auf `http://localhost:8080`. Das Fenster offen lassen, solange das Plugin laufen soll.
+3. **In RemNote laden:** Einstellungen → **Plugins** → Reiter **Build** → **Develop from localhost** → `http://localhost:8080` → «Develop». Falls RemNote fragt, ob das Plugin im **nativen Modus** laufen darf: erlauben. Ohne nativen Modus kann das Plugin gesperrte Tabs nicht erkennen.
 
-```
-https://joenupower.github.io/remnote-tab-sperre/
-```
-
-Falls RemNote fragt, ob das Plugin im **nativen Modus** laufen darf: erlauben. Ohne nativen Modus kann das Plugin gesperrte Tabs nicht erkennen.
-
-Die Plugin-Dateien liegen auf GitHub Pages (Branch `gh-pages`). Ein lokaler Server ist dafür nicht nötig.
+RemNote lädt selbst gebaute Plugins nur von `http://localhost`. Ohne Marketplace-Freigabe braucht es deshalb den lokalen Server.
 
 ## Einstellungen und Fehlersuche
 
@@ -47,6 +43,8 @@ Der Befehl **«Tab-Sperre: Status anzeigen»** (Suche mit Strg+K) zeigt, ob der 
 Befehle:
 
 - `npm install`: Abhängigkeiten installieren
-- `npm run dev`: Entwicklungsserver auf `http://localhost:8080` (`plugin-starten.bat` unter Windows). Achtung: Die RemNote-Desktop-App blockiert den Zugriff auf `localhost`. Der lokale Server funktioniert nur mit RemNote im Browser, und der Browser muss den Zugriff aufs lokale Netzwerk erlauben.
+- `npm run dev`: Entwicklungsserver auf `http://localhost:8080` (unter Windows: `plugin-starten.bat`)
 - `npm run check-types`: TypeScript-Prüfung
-- Veröffentlichen: `NODE_ENV=production npx webpack` baut nach `dist/`. Den Inhalt von `dist/` (plus eine leere Datei `.nojekyll`) in den Branch `gh-pages` legen.
+- `npm run build`: prüft das Manifest und baut `PluginZip.zip` (für eine allfällige Einreichung im RemNote-Marketplace)
+
+Hinweis: `repoUrl` im Manifest muss eine gültige Adresse sein, sonst lehnt RemNote das Plugin beim Laden ab.
