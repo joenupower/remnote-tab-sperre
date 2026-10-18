@@ -8,10 +8,11 @@ import {
   type PaneNode,
   type TabKind,
 } from '../lib/tabsperre';
+import { detectLang, t } from '../lib/i18n';
 
 /*
- * Tab-Sperre für Panels
- * ---------------------
+ * Locked Tab Panes (Tab-Sperre für Panels)
+ * ----------------------------------------
  * RemNote führt alle Plugins abgeschottet (Sandbox) aus. Das Plugin arbeitet deshalb nur
  * mit offiziellen Schnittstellen:
  *
@@ -130,7 +131,7 @@ class TabSperre {
   }
 
   private async debug(...args: unknown[]) {
-    if (await this.setting(SETTING_DEBUG, false)) console.log('[Tab-Sperre]', ...args);
+    if (await this.setting(SETTING_DEBUG, false)) console.log('[Locked Tab Panes]', ...args);
   }
 
   private async applyCss() {
@@ -138,7 +139,7 @@ class TabSperre {
     try {
       await this.plugin.app.registerCSS(CSS_ID, hide ? LOCK_CSS : '');
     } catch (e) {
-      console.warn('[Tab-Sperre] CSS konnte nicht gesetzt werden', e);
+      console.warn('[Locked Tab Panes] could not register CSS', e);
     }
   }
 
@@ -163,12 +164,9 @@ class TabSperre {
 
   private async notify(change: LayoutChange) {
     if (!(await this.setting(SETTING_TOAST, true))) return;
-    const text =
-      change === 'pane-closed'
-        ? 'Tab ist gesperrt – das Panel bleibt offen.'
-        : 'Tab ist gesperrt – hier kommen keine Panels dazu.';
+    const text = change === 'pane-closed' ? t('toastClosed', LANG) : t('toastAdded', LANG);
     try {
-      await this.plugin.app.toast(`🔒 ${text} (Entsperren: Rechtsklick auf den Tab)`);
+      await this.plugin.app.toast(`🔒 ${text} ${t('unlockHint', LANG)}`);
     } catch {
       // egal
     }
@@ -183,7 +181,7 @@ class TabSperre {
     try {
       await this.evaluate();
     } catch (e) {
-      console.warn('[Tab-Sperre] Fehler', e);
+      console.warn('[Locked Tab Panes] error', e);
     } finally {
       this.running = false;
       if (this.rerun) {
@@ -227,7 +225,7 @@ class TabSperre {
           return; // this.last bleibt der gesperrte Tab
         } catch (e) {
           this.suppressUntil = 0;
-          console.warn('[Tab-Sperre] Zurückspringen fehlgeschlagen', e);
+          console.warn('[Locked Tab Panes] jumping back failed', e);
         }
       }
     }
@@ -238,36 +236,41 @@ class TabSperre {
 
   async statusText(): Promise<string> {
     const s = await this.readSnapshot();
-    const art =
-      s.kind === 'tab' ? 'normaler Tab' : s.kind === 'temp' ? 'temporärer Tab' : 'unbekannte Seite';
+    const kind =
+      s.kind === 'tab' ? t('kindTab', LANG) : s.kind === 'temp' ? t('kindTemp', LANG) : t('kindOther', LANG);
     const hide = await this.setting(SETTING_HIDE, true);
-    return `Tab-Sperre aktiv · ${art} · ${s.leaves.length} Panel(s) · ✕-Knöpfe in gesperrten Tabs ${
-      hide ? 'ausgeblendet' : 'sichtbar'
-    }`;
+    return [
+      t('statusActive', LANG),
+      kind,
+      `${s.leaves.length} ${t('panes', LANG)}`,
+      hide ? t('hideOn', LANG) : t('hideOff', LANG),
+    ].join(' · ');
   }
 }
+
+const LANG = detectLang();
 
 let sperre: TabSperre | null = null;
 
 async function onActivate(plugin: ReactRNPlugin) {
   await plugin.settings.registerBooleanSetting({
     id: SETTING_HIDE,
-    title: '✕-Knöpfe und Panel-Menüeinträge in gesperrten Tabs ausblenden',
+    title: t('settingHide', LANG),
     defaultValue: true,
   });
   await plugin.settings.registerBooleanSetting({
     id: SETTING_JUMP,
-    title: 'Bei geschlossenem oder neuem Panel in den gesperrten Tab zurückspringen',
+    title: t('settingJump', LANG),
     defaultValue: true,
   });
   await plugin.settings.registerBooleanSetting({
     id: SETTING_TOAST,
-    title: 'Hinweis anzeigen, wenn eine Änderung blockiert wurde',
+    title: t('settingToast', LANG),
     defaultValue: true,
   });
   await plugin.settings.registerBooleanSetting({
     id: SETTING_DEBUG,
-    title: 'Fehlersuche: Details in die Konsole schreiben',
+    title: t('settingDebug', LANG),
     defaultValue: false,
   });
 
@@ -275,7 +278,7 @@ async function onActivate(plugin: ReactRNPlugin) {
 
   await plugin.app.registerCommand({
     id: 'tabsperre-status',
-    name: 'Tab-Sperre: Status anzeigen',
+    name: t('commandStatus', LANG),
     action: async () => {
       if (sperre) await plugin.app.toast(await sperre.statusText());
     },

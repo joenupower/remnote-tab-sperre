@@ -1,17 +1,17 @@
 {
   "manifestVersion": 1,
-  "id": "tab-sperre-panels",
-  "name": "Tab-Sperre für Panels",
+  "id": "locked-tab-panes",
+  "name": "Locked Tab Panes",
   "author": "Jonas Hausherr",
   "repoUrl": "https://github.com/joenupower/remnote-tab-sperre",
   "version": {
-    "major": 0,
-    "minor": 2,
-    "patch": 1
+    "major": 1,
+    "minor": 0,
+    "patch": 0
   },
   "theme": [],
-  "enableOnMobile": false,
-  "description": "Gesperrte Tabs (Lock Tab) schützen ihre Panels: kein Schliessen, kein neues Panel, kein Dokumentwechsel.",
+  "enableOnMobile": true,
+  "description": "Locked tabs keep their panes: hides pane close buttons and 'Open in Another Pane' in locked tabs and jumps back if a pane is closed or added anyway.",
   "requestNative": false,
   "requiredScopes": [
     {
