@@ -4,7 +4,7 @@ Wenn du einen Tab mit **Rechtsklick → «Lock Tab»** sperrst, bleiben seine Pa
 
 | Aktion im gesperrten Tab | Was passiert |
 |---|---|
-| Panel schliessen | ✕-Knöpfe sind ausgeblendet. Wird trotzdem ein Panel geschlossen (z. B. per Tastenkürzel), holt dich das Plugin sofort in den gesperrten Tab zurück. |
+| Panel schliessen | ✕-Knöpfe sind ausgeblendet, auch bei geöffneten Dateien (PDF, Word usw.). Wird trotzdem ein Panel geschlossen (z. B. per Tastenkürzel), holt dich das Plugin sofort in den gesperrten Tab zurück. |
 | Neues Panel öffnen | Menüeinträge wie «Open in Another Pane» sind ausgeblendet. Kommt trotzdem ein Panel dazu, springt das Plugin zurück in den gesperrten Tab. |
 | Dokument im Panel wechseln (Link anklicken) | Das Panel behält sein Dokument. Der Link öffnet sich wie in RemNote üblich im temporären Tab (Uhr-Symbol). |
 | Grösse oder Anordnung der Panels ändern | Erlaubt. |

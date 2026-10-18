@@ -34,8 +34,15 @@ const CSS_ID = 'tabsperre-panels';
 const LOCKED = 'body:has(.rn-tabs-tab-button--locked.rn-clr-background-primary)';
 const LOCK_CSS = `
 /* Tab-Sperre: im gesperrten Tab Panel-Schliessknöpfe und Panel-Menüeinträge ausblenden */
+/* ✕ bei Dokumenten */
 ${LOCKED} .rn-pane__close-btn,
 ${LOCKED} [data-test="Close Pane Button"],
+/* ✕ bei geöffneten Dateien (PDF, Word, Video …) */
+${LOCKED} [data-test="Learning Page Close Button"],
+/* ✕ bei weiteren Panel-Arten (z. B. Graph-Ansicht) */
+${LOCKED} [data-test="Panel Close Button"],
+${LOCKED} .multiple-windows__close-pane__container,
+/* Menüeinträge wie «Open in Another Pane» */
 ${LOCKED} [data-test^="Menu Label:"][data-test*="Pane"] {
   display: none !important;
 }
