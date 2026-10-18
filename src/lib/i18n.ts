@@ -12,8 +12,8 @@ export function detectLang(language?: string): Lang {
 
 const TEXTS = {
   settingHide: {
-    de: '✕-Knöpfe und Panel-Menüeinträge in gesperrten Tabs ausblenden',
-    en: 'Hide pane close buttons and pane menu items in locked tabs',
+    de: '✕-Knöpfe, Panel-Menüeinträge und Pfeile Zurück/Vor in gesperrten Tabs ausblenden, Ordnerpfad nicht anklickbar',
+    en: 'Hide pane close buttons, pane menu items and back/forward arrows in locked tabs; folder path not clickable',
   },
   settingJump: {
     de: 'Bei geschlossenem oder neuem Panel in den gesperrten Tab zurückspringen',

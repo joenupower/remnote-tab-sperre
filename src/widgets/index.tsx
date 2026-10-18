@@ -17,8 +17,9 @@ import { detectLang, t } from '../lib/i18n';
  * mit offiziellen Schnittstellen:
  *
  *  1. CSS (registerCSS): Ist der aktive Tab mit «Lock Tab» gesperrt, werden die ✕-Knöpfe
- *     der Panels und alle Menüeinträge rund um Panels («Open in Another Pane» usw.)
- *     ausgeblendet. Die Erkennung läuft rein über CSS (:has), RemNote markiert den aktiven,
+ *     der Panels, alle Menüeinträge rund um Panels («Open in Another Pane» usw.) und die
+ *     Pfeile Zurück/Vor ausgeblendet. Der Ordnerpfad oben im Panel bleibt sichtbar,
+ *     reagiert aber nicht mehr auf Klicks. Die Erkennung läuft rein über CSS (:has), RemNote markiert den aktiven,
  *     gesperrten Tab-Knopf mit «rn-tabs-tab-button--locked» + «rn-clr-background-primary».
  *
  *  2. Zurückspringen (getURL/setURL): Wird in einem gesperrten Tab trotzdem ein Panel
@@ -44,8 +45,25 @@ ${LOCKED} [data-test="Learning Page Close Button"],
 ${LOCKED} [data-test="Panel Close Button"],
 ${LOCKED} .multiple-windows__close-pane__container,
 /* Menüeinträge wie «Open in Another Pane» */
-${LOCKED} [data-test^="Menu Label:"][data-test*="Pane"] {
+${LOCKED} [data-test^="Menu Label:"][data-test*="Pane"],
+/* Pfeile Zurück/Vor (Desktop-App): würden im gesperrten Tab einen neuen Tab öffnen */
+${LOCKED} [data-test="Electron Window History Back Button"],
+${LOCKED} [data-test="Electron Window History Forward Button"],
+${LOCKED} [data-test="Electron Window Tablet History Back Button"],
+${LOCKED} [data-test="Electron Window Tablet History Forward Button"],
+${LOCKED} .rn-back-button,
+${LOCKED} .rn-forward-button {
   display: none !important;
+}
+/* Ordnerpfad oben im Panel (z. B. «📁 Rechtschreibung») und Knopf «Übergeordneter Ordner»
+   bei geöffneten Dateien: bleiben sichtbar, ein Klick wechselt aber nicht mehr eine Ebene hoch */
+${LOCKED} [data-test="Document Header Breadcrumbs"],
+${LOCKED} [data-test="Learning Page Header"] :has(> [style*="back-to-folder"]) {
+  pointer-events: none !important;
+}
+/* Die kleinen Pfeile zum Durchblättern eines langen Pfads funktionieren weiter */
+${LOCKED} [data-test="Document Header Breadcrumbs"] button[data-test*="Scroll"] {
+  pointer-events: auto !important;
 }
 `;
 

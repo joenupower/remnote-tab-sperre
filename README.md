@@ -6,6 +6,8 @@ Lock a tab in RemNote (**right-click the tab → Lock Tab**) and its panes stay 
 |---|---|
 | Close a pane | The pane close buttons (✕) are hidden, for documents as well as for opened files (PDF, Word, video). If a pane gets closed anyway (e.g. with a keyboard shortcut), the plugin takes you straight back to the locked tab. |
 | Add a pane | Menu items such as "Open in Another Pane" are hidden. If a pane gets added anyway, the plugin takes you back to the locked tab. |
+| Back / forward arrows | Hidden (desktop app). In a locked tab they would open a new tab. |
+| Folder path above the document (e.g. "📁 Notes") | Stays visible but is no longer clickable, so a pane can't jump up a level. The same goes for the "Open Parent Folder" button of opened files. |
 | Click a link | The pane keeps its document. The link opens in RemNote's temporary tab, as usual. |
 | Resize or rearrange panes | Allowed. |
 
@@ -23,7 +25,7 @@ No data leaves RemNote. The plugin makes no network requests and uses no third-p
 
 ## Settings
 
-- **Hide pane close buttons and pane menu items in locked tabs** (default: on)
+- **Hide pane close buttons, pane menu items and back/forward arrows in locked tabs; folder path not clickable** (default: on)
 - **Jump back to the locked tab if a pane is closed or added anyway** (default: on)
 - **Show a notice when a change was blocked** (default: on)
 - **Debugging: log details to the console** (default: off)
@@ -48,6 +50,8 @@ Tested with RemNote 1.28 (October 2026).
 
 - Die ✕-Knöpfe der Panels sind ausgeblendet, auch bei geöffneten Dateien (PDF, Word usw.).
 - Menüeinträge wie «Open in Another Pane» sind ausgeblendet.
+- Die Pfeile Zurück/Vor (Desktop-App) sind ausgeblendet; im gesperrten Tab würden sie einen neuen Tab öffnen.
+- Der Ordnerpfad oben im Panel (z. B. «📁 Rechtschreibung») bleibt sichtbar, ist aber nicht mehr anklickbar. Dasselbe gilt für den Knopf «Übergeordneter Ordner» bei geöffneten Dateien.
 - Wird trotzdem ein Panel geschlossen oder hinzugefügt, springt das Plugin zurück in den gesperrten Tab.
 - Links öffnen wie gewohnt im temporären Tab. Grösse und Anordnung der Panels bleiben frei.
 
