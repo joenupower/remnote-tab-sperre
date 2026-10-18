@@ -1,14 +1,11 @@
 /**
  * Reine Logik der Tab-Sperre (ohne RemNote-API), damit sie sich testen lässt.
  *
- * Hintergrund (getestet mit RemNote, Oktober 2026):
+ * Hintergrund (getestet mit RemNote 1.28, Oktober 2026):
  * - Die Adresse eines normalen Tabs lautet  /t/<kbId>/<tabId>/<windowString>
  * - Ein temporärer Tab (Uhr-Symbol) hat die Adresse  /w/<kbId>/<windowString>
- * - RemNote speichert die Tabs im localStorage unter dem Schlüssel «tabs»,
- *   z. B. [{"id":"dtpIfat3M6EG","windowString":"…","kbId":"…","locked":true},
- *          {"detached":true,"id":"detached"}, …]
- * - Die Reihenfolge in diesem Array entspricht den Tab-Knöpfen
- *   (data-test="TopTab <Index>").
+ * - plugin.window.getURL() liefert genau diesen Pfad (window.location.pathname),
+ *   plugin.window.setURL(pfad) navigiert dorthin und wechselt dabei den Tab.
  */
 
 export type TabKind = 'tab' | 'temp' | 'other';
@@ -18,15 +15,6 @@ export interface ActiveTabInfo {
   kbId?: string;
   tabId?: string;
   windowString?: string;
-}
-
-export interface StoredTab {
-  id: string;
-  kbId?: string;
-  windowString?: string;
-  locked?: boolean;
-  detached?: boolean;
-  cachedTitle?: string;
 }
 
 /** Liest Tab-Art, Tab-ID und Layout-String aus einer RemNote-Adresse. */
@@ -63,31 +51,6 @@ export function parseRemNoteUrl(url: string | undefined | null): ActiveTabInfo {
     };
   }
   return { kind: 'other' };
-}
-
-/** Parst den localStorage-Eintrag «tabs». Liefert [] bei Fehlern. */
-export function parseStoredTabs(raw: string | null | undefined): StoredTab[] {
-  if (!raw) return [];
-  try {
-    const data = JSON.parse(raw);
-    if (!Array.isArray(data)) return [];
-    return data.filter((t): t is StoredTab => !!t && typeof t === 'object' && typeof t.id === 'string');
-  } catch {
-    return [];
-  }
-}
-
-/** true/false, wenn der Tab bekannt ist; undefined, wenn er nicht gefunden wurde. */
-export function isTabLocked(tabs: StoredTab[], tabId: string | undefined): boolean | undefined {
-  if (!tabId) return undefined;
-  const tab = tabs.find((t) => t.id === tabId);
-  if (!tab) return undefined;
-  return tab.locked === true;
-}
-
-/** Index des Tabs in der Tab-Leiste (entspricht data-test="TopTab <Index>"). */
-export function tabButtonIndex(tabs: StoredTab[], tabId: string): number {
-  return tabs.findIndex((t) => t.id === tabId);
 }
 
 /* ------------------------------------------------------------------ */
@@ -178,17 +141,4 @@ export function classifyChange(before: string[], after: string[]): LayoutChange 
     if (after.length === 1 || after.some((x) => b.has(x))) return 'doc-changed';
   }
   return 'unrelated';
-}
-
-/** Wandelt ein Layout mit Panel-Infos in ein reines Dokument-ID-Layout (für setRemWindowTree). */
-export function toRemIdTree(node: PaneNode): unknown | null {
-  if (isParent(node)) {
-    const first = toRemIdTree(node.first);
-    const second = toRemIdTree(node.second);
-    if (first === null || second === null) return null;
-    const out: Record<string, unknown> = { direction: node.direction, first, second };
-    if (typeof node.splitPercentage === 'number') out.splitPercentage = node.splitPercentage;
-    return out;
-  }
-  return node.remId ? node.remId : null;
 }

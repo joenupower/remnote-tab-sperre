@@ -5,7 +5,7 @@ Wenn du einen Tab mit **Rechtsklick → «Lock Tab»** sperrst, bleiben seine Pa
 | Aktion im gesperrten Tab | Was passiert |
 |---|---|
 | Panel schliessen | ✕-Knöpfe sind ausgeblendet. Wird trotzdem ein Panel geschlossen (z. B. per Tastenkürzel), holt dich das Plugin sofort in den gesperrten Tab zurück. |
-| Neues Panel öffnen («Open in Another Pane») | Wird blockiert, du bleibst im gesperrten Tab. |
+| Neues Panel öffnen | Menüeinträge wie «Open in Another Pane» sind ausgeblendet. Kommt trotzdem ein Panel dazu, springt das Plugin zurück in den gesperrten Tab. |
 | Dokument im Panel wechseln (Link anklicken) | Das Panel behält sein Dokument. Der Link öffnet sich wie in RemNote üblich im temporären Tab (Uhr-Symbol). |
 | Grösse oder Anordnung der Panels ändern | Erlaubt. |
 
@@ -15,7 +15,7 @@ Zum Ändern des Layouts entsperrst du den Tab kurz (Rechtsklick → «Unlock»).
 
 1. **Node.js installieren** (einmalig): auf <https://nodejs.org> die Version «LTS».
 2. **`plugin-starten.bat` doppelklicken.** Beim ersten Start werden die Abhängigkeiten installiert (1–2 Minuten). Danach läuft das Plugin auf `http://localhost:8080`. Das Fenster offen lassen, solange das Plugin laufen soll.
-3. **In RemNote laden:** Einstellungen → **Plugins** → Reiter **Build** → **Develop from localhost** → `http://localhost:8080` → «Develop». Falls RemNote fragt, ob das Plugin im **nativen Modus** laufen darf: erlauben. Ohne nativen Modus kann das Plugin gesperrte Tabs nicht erkennen.
+3. **In RemNote laden:** Einstellungen → **Plugins** → Reiter **Build** → **Develop from localhost** → `http://localhost:8080` → «Develop».
 
 RemNote lädt selbst gebaute Plugins nur von `http://localhost`. Ohne Marketplace-Freigabe braucht es deshalb den lokalen Server.
 
@@ -23,22 +23,25 @@ RemNote lädt selbst gebaute Plugins nur von `http://localhost`. Ohne Marketplac
 
 Unter Einstellungen → Plugins → «Tab-Sperre für Panels»:
 
-- **✕-Knöpfe der Panels in gesperrten Tabs ausblenden** (Standard: an)
+- **✕-Knöpfe und Panel-Menüeinträge in gesperrten Tabs ausblenden** (Standard: an)
+- **Bei geschlossenem oder neuem Panel in den gesperrten Tab zurückspringen** (Standard: an)
 - **Hinweis anzeigen, wenn eine Änderung blockiert wurde** (Standard: an)
 - **Fehlersuche: Details in die Konsole schreiben** (Standard: aus)
 
-Der Befehl **«Tab-Sperre: Status anzeigen»** (Suche mit Strg+K) zeigt, ob der aktuelle Tab als gesperrt erkannt wird und wie viele Panels er hat.
+Der Befehl **«Tab-Sperre: Status anzeigen»** (Suche mit Strg+K) zeigt, ob das Plugin läuft, ob du in einem normalen oder temporären Tab bist und wie viele Panels er hat.
 
 ## Wichtig zu wissen
 
-- Die Plugin-Schnittstelle von RemNote kennt keine Tabs. Das Plugin liest deshalb RemNotes interne Tab-Liste (Browser-Speicher «tabs») und die Tab-Leiste. Ein RemNote-Update kann das ändern. Wenn die Sperre plötzlich nicht mehr greift, zuerst den Status-Befehl ausprobieren.
-- Getestet mit der RemNote-Webversion im Oktober 2026.
+- RemNote führt alle Plugins abgeschottet aus (kein «nativer Modus»). Das Plugin nutzt deshalb nur offizielle Schnittstellen: CSS (`registerCSS`) und die Adresse (`getURL`/`setURL`).
+- Gesperrte Tabs erkennt das CSS an RemNotes Klassen `rn-tabs-tab-button--locked` und `rn-clr-background-primary`. Ein RemNote-Update kann diese Namen ändern. Wenn die ✕-Knöpfe in gesperrten Tabs plötzlich wieder sichtbar sind, liegt es wahrscheinlich daran.
+- RemNote schützt das Layout eines gesperrten Tabs von sich aus, leitet Änderungen aber in einen temporären Tab um. Das Plugin verhindert diese Umleitungen und holt dich zurück.
+- Getestet mit RemNote 1.28 (Webversion) im Oktober 2026.
 
 ## Entwickeln
 
-- `src/widgets/index.tsx`: Steuerung (Ereignisse, CSS, Zurückspringen, Wiederherstellen)
-- `src/lib/tabsperre.ts`: reine Logik (Adresse lesen, Tab-Liste lesen, Layouts vergleichen)
-- `public/manifest.json`: Plugin-Beschreibung (`requestNative: true`)
+- `src/widgets/index.tsx`: Steuerung (CSS, Ereignisse, Zurückspringen)
+- `src/lib/tabsperre.ts`: reine Logik (Adresse lesen, Layouts vergleichen)
+- `public/manifest.json`: Plugin-Beschreibung
 
 Befehle:
 
